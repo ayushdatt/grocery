@@ -74,91 +74,36 @@
 				$this->response('',404);				// If the method not exist with in this class, response would be "Page not found".
 		}
 		
-		/* 
-		 *	Simple login API
-		 *  Login must be POST method
-		 *  email : <USER EMAIL>
-		 *  pwd : <USER PASSWORD>
-		 */
-		
-		private function login(){
-			// Cross validation if the request method is POST else it will return "Not Acceptable" status
-			if($this->get_request_method() != "POST"){
-				$this->response('',406);
-			}
-			
-			$email = $this->_request['email'];	
-			$password = $this->_request['pwd'];
-                        echo "<br>";
-                        echo $email."<br>";
-                        echo $password."<br>";
-			// Input validations
-			if(!empty($email) and !empty($password)){
-				if(filter_var($email, FILTER_VALIDATE_EMAIL)){
-					$sql = mysql_query("SELECT user_id, user_fullname, user_email FROM users WHERE user_email = '$email' AND user_password = '".md5($password)."' LIMIT 1", $this->db);
-					if(mysql_num_rows($sql) > 0){
-						$result = mysql_fetch_array($sql,MYSQL_ASSOC);
-						
-						// If success everythig is good send header as "OK" and user details
-						$this->response($this->json($result), 200);
-					}
-					$this->response('', 204);	// If no records "No Content" status
-				}
-			}
-                        else{
-                            echo "aaya";
-                            // If invalid inputs "Bad Request" status message and reason
-                            $error = array('status' => "Failed", "msg" => "Invalid Email address or Password");
-                            $this->response($this->json($error), 400);
-                        }
+
+		//called by the delivery system
+		private function checkOrderIDAndPin($pin, $orderID){
+			//check the database if the entry corresponding to orderID and pin is available
+			return 1;
 		}
-		
-		private function users(){	
-			// Cross validation if the request method is GET else it will return "Not Acceptable" status
-			if($this->get_request_method() != "GET"){
-				$this->response('',406);
-			}
-			$sql = mysql_query("SELECT user_id, user_fullname, user_email FROM users WHERE user_status = 1", $this->db);
-			if(mysql_num_rows($sql) > 0){
-				$result = array();
-				while($rlt = mysql_fetch_array($sql,MYSQL_ASSOC)){
-					$result[] = $rlt;
-				}
-				// If success everythig is good send header as "OK" and return list of users in JSON format
-				$this->response($this->json($result), 200);
-			}
-			$this->response('',204);	// If no records "No Content" status
-		}
-		
-		private function deleteUser(){
-			// Cross validation if the request method is DELETE else it will return "Not Acceptable" status
-			if($this->get_request_method() != "DELETE"){
-				$this->response('',406);
-			}
-			$id = (int)$this->_request['id'];
-			if($id > 0){				
-				mysql_query("DELETE FROM users WHERE user_id = $id");
-				$success = array('status' => "Success", "msg" => "Successfully one record deleted.");
-				$this->response($this->json($success),200);
-			}else
-				$this->response('',204);	// If no records "No Content" status
-		}
-		
+
+        //delivery pick order 
+        private function pickOrder($time, $orderID, $pin){
+        	$ok=1;
+        	if(checkOrderIDAndPin($pin, $orderID)){
+        		//means that the pin is valid for the orderID
+        		return $ok;
+        	}
+        	//prepare order before given time
+        	return 0;//there is some problem the pin does not match the order id, INVALID request
+        }
+
         private function checkAvailability($name, $qty){
         	echo "checking";
             //return a number of the availability or -1 if the item is not availble in the store
             return array(1, 10);
         }
 
+        private function genPin(){
+        	return 44;//return unique pin code for confirmation
+        }
 
         private function genOrderID(){
         	return 100;
-        }
-
-        //delivery pick order 
-        private function pickOrder($time, $orderID){
-        	//prepare order before given time
-        	return;
         }
 
         private function getPrice($name){
@@ -202,6 +147,7 @@
 	            $result["price"]=$price;
 	            $result["total"]=$total;
 	            $result["orderID"]=$this->genOrderID();
+	            $result["pin"]=$this->genPin();
 	            print_r($result);
 				$this->response($this->json($result), 200);
 
