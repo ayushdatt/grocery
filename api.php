@@ -1,5 +1,4 @@
 <?php
-    
 	/* 
 		This is an example class script proceeding secured API
 		To use this class you should keep same as query string and function name
@@ -67,7 +66,9 @@
 		 */
 		public function processApi(){
 			$func = strtolower(trim(str_replace("/","",$_REQUEST['rquest'])));
-			if((int)method_exists($this,$func) > 0)
+			echo "Important func call ".$func;
+                        echo "<br>";
+                        if((int)method_exists($this,$func) > 0)
 				$this->$func();
 			else
 				$this->response('',404);				// If the method not exist with in this class, response would be "Page not found".
@@ -86,9 +87,11 @@
 				$this->response('',406);
 			}
 			
-			$email = $this->_request['email'];		
+			$email = $this->_request['email'];	
 			$password = $this->_request['pwd'];
-			
+                        echo "<br>";
+                        echo $email."<br>";
+                        echo $password."<br>";
 			// Input validations
 			if(!empty($email) and !empty($password)){
 				if(filter_var($email, FILTER_VALIDATE_EMAIL)){
@@ -102,10 +105,12 @@
 					$this->response('', 204);	// If no records "No Content" status
 				}
 			}
-			
-			// If invalid inputs "Bad Request" status message and reason
-			$error = array('status' => "Failed", "msg" => "Invalid Email address or Password");
-			$this->response($this->json($error), 400);
+                        else{
+                            echo "aaya";
+                            // If invalid inputs "Bad Request" status message and reason
+                            $error = array('status' => "Failed", "msg" => "Invalid Email address or Password");
+                            $this->response($this->json($error), 400);
+                        }
 		}
 		
 		private function users(){	
@@ -139,6 +144,49 @@
 				$this->response('',204);	// If no records "No Content" status
 		}
 		
+                private function checkAvailability($name, $qty){
+                    //return a number of the availability or -1 if the item is not availble in the store
+                    return true;
+                }
+                
+                private function getPriceListAndAvailability(){
+                        echo "hi";
+			// Cross validation if the request method is POST else it will return "Not Acceptable" status
+			if($this->get_request_method() != "POST"){
+				$this->response('',406);
+			}
+			
+			$num_items = $this->_request['num_items'];	
+                        echo $num_items;
+                        // Input validations
+			if(!empty($num_items)){
+                            $item_name=$this->_request['item_name'];
+                            $qty=$this->_request['qty'];
+                            for($i=0; $i<$num_items; $i++){
+                                echo "printing";
+                                echo $item_name[$i]." ".$qty[$i];
+                                checkAvailability($item_name[$i], $qty[$i]);
+                            }
+//				if(filter_var($email, FILTER_VALIDATE_EMAIL)){
+//					$sql = mysql_query("SELECT user_id, user_fullname, user_email FROM users WHERE user_email = '$email' AND user_password = '".md5($password)."' LIMIT 1", $this->db);
+//					if(mysql_num_rows($sql) > 0){
+//						$result = mysql_fetch_array($sql,MYSQL_ASSOC);
+//						
+//						// If success everythig is good send header as "OK" and user details
+//						$this->response($this->json($result), 200);
+//					}
+//					$this->response('', 204);	// If no records "No Content" status
+//				}
+			}
+                        else{
+                            echo "error expected params missing aaya";
+                            // If invalid inputs "Bad Request" status message and reason
+                            $error = array('status' => "Failed", "msg" => "Invalid Email address or Password");
+                            $this->response($this->json($error), 400);
+                        }
+		}
+                
+                
 		/*
 		 *	Encode array into JSON
 		*/
@@ -147,6 +195,7 @@
 				return json_encode($data);
 			}
 		}
+                
 	}
 	
 	// Initiiate Library

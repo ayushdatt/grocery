@@ -109,7 +109,7 @@
 				$clean_input = trim($data);
 			}
 			return $clean_input;
-		}		
+		}	
 		
 		private function set_headers(){
 			header("HTTP/1.1 ".$this->_code." ".$this->get_status_message());
