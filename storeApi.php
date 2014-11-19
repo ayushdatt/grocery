@@ -66,8 +66,8 @@
 		 */
 		public function processApi(){
 			$func = strtolower(trim(str_replace("/","",$_REQUEST['rquest'])));
-			echo "Important func call ".$func;
-                        echo "<br>";
+			//echo "Important func call ".$func;
+                        //echo "<br>";
                         if((int)method_exists($this,$func) > 0)
 				$this->$func();
 			else
@@ -93,7 +93,6 @@
         }
 
         private function checkAvailability($name, $qty){
-        	echo "checking";
             //return a number of the availability or -1 if the item is not availble in the store
             return array(1, 10);
         }
@@ -130,10 +129,11 @@
 			if(!empty($num_items)){
 	            $item_name=$this->_request['item_name'];
 	            $qty=$this->_request['qty'];
+                    //print_r($qty);
+                    //print_r(unserialize($qty[0]));
+                    $qty=unserialize($qty[0]);
 	            for($i=0; $i<$num_items; $i++){
 	            	$qty[$i]=intval($qty[$i]);
-	                echo "printing";
-	                echo $item_name[$i]." ".$qty[$i];
 	                if($this->checkQuan($item_name[$i], $qty[$i])){
 		                $temp=$this->getPrice($item_name[$i]);
 		            	$price[$i]=$qty[$i]*$temp;
@@ -142,13 +142,13 @@
 	            }
 
 	            $result=array();
-	            $result["item_name"]=$item_name;
+	            $result["item_name"]=$item_name[0];
 	            $result["qty"]=$qty;
 	            $result["price"]=$price;
 	            $result["total"]=$total;
 	            $result["orderID"]=$this->genOrderID();
 	            $result["pin"]=$this->genPin();
-	            print_r($result);
+	            //print_r($result);
 				$this->response($this->json($result), 200);
 
 			}
@@ -168,34 +168,40 @@
                 
 		private function getPriceListAndAvailability(){
 			// Cross validation if the request method is POST else it will return "Not Acceptable" status
-			
+			//echo "hello";
 			$num_items = $this->_request['num_items'];	
-            $num_items = intval($num_items);
-                        echo $num_items;
+                        $num_items = intval($num_items);
+                        //echo $num_items;
 
                         // Input validations
 
-            $price=array();
-            $status=array();
-            $avl_qty=array();
+                        $price=array();
+                        $status=array();
+                        $avl_qty=array();
 			if(!empty($num_items)){
 	            $item_name=$this->_request['item_name'];
+                    //echo "hello";
+                    //print_r(unserialize($item_name));
+                    
 	            $qty=$this->_request['qty'];
 	            for($i=0; $i<$num_items; $i++){
 	            	$qty[$i]=intval($qty[$i]);
-	                echo "printing";
-	                echo $item_name[$i]." ".$qty[$i];
+	                //echo "printing";
+	                //echo $item_name[$i]." ".$qty[$i];
 	                $temp=$this->checkAvailability($item_name[$i], $qty[$i]);
 	            	$price[$i]=$temp[1];
 	            	$avl_qty[$i]=$temp[0];
 	            }
 
 	            $result=array();
-	            $result["item_name"]=$item_name;
+                    $result["num_items"]=$num_items;
+	            $result["item_name"]=$item_name[0];
 	            $result["qty"]=$qty;
 	            $result["price"]=$price;
 	            $result["avl_qty"]=$avl_qty;
-	            print_r($result);
+	            $result["orderID"]=$this->genOrderID();
+	            $result["pin"]=$this->genPin();
+	            //print_r($result);
 				$this->response($this->json($result), 200);
 
 			}

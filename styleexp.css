@@ -1,0 +1,119 @@
+body {
+	/*background-image: -moz-linear-gradient(bottom, #FFFFFF 0%, #F9F9F9 100%);*/
+	background-image:url('back1');
+	} 
+textarea {
+	width: 98%;
+	border: 2px solid;
+	-webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    font-size: 20px;
+}
+.file {
+    position:absolute;
+    top:0;
+    right:0;
+
+    /* start of transparency styles */
+    opacity:0;
+    -moz-opacity:0;
+    filter:alpha(opacity:0);
+    /* end of transparency styles */
+
+    z-index:2; /* bring the real upload interactivity up front */
+    width:270px;
+}
+fieldset {
+	border: 2px solid;
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	border-radius: 8px;
+	padding: 3px;
+}
+input[type=text] {
+	color : #747862;
+	/*we will first set the border styles.*/
+	border-width: 2px;
+	border-style: solid;
+	border-color: gray;
+	/*we are now going to add in the shadow image that we created earlier*/
+	background-image: url(back_field.gif);
+	background-repeat: repeat-x;
+	/*Now we are going to add some text formatting of our own*/
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 25px;
+	-webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+	color: #333333;
+	width: 300px;
+	height: 35px;
+}
+input[type=text]:focus {
+	border-width: 2px;
+	border-color: black;
+}
+
+button, input[type="button"], input[type="submit"] {  
+        position: relative;  
+        margin: 13px auto;  
+      
+        font: bold 6em/2em "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;  
+        text-align: center;  
+        color: hsla(0,0%,6%,1);  
+        text-shadow: hsla(0,0%,40%,.5) 0 -1px 0, hsla(0,0%,100%,.6) 0 2px 1px;       
+        background-color: hsl(0,0%,75%);  
+        -webkit-box-shadow: inset hsla(0,0%,15%,  1) 0  0px 0px 4px,    /* border */  
+                            inset hsla(0,0%,15%, .8) 0 -1px 5px 4px,    /* soft SD */  
+                            inset hsla(0,0%,0%, .25) 0 -1px 0px 7px,    /* bottom SD */  
+                            inset hsla(0,0%,100%,.7) 0  2px 1px 7px,    /* top HL */  
+      
+                                  hsla(0,0%, 0%,.15) 0 -5px 6px 4px,    /* outer SD */  
+                                  hsla(0,0%,100%,.5) 0  5px 6px 4px;    /* outer HL */    
+      
+        -webkit-transition: color .2s;  
+    }  
+button, input[type="button"], input[type="submit"].linear {  
+        width: 195px;  
+        font-size: 15pt;  
+        height: 40px;  
+        border-radius: .5em;  
+        background-image:   -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0)   6%, hsla(0,0%,100%, .1) 7.5%),  
+                            -webkit-repeating-linear-gradient(left, hsla(0,0%,  0%,0) 0%, hsla(0,0%,  0%,0)   4%, hsla(0,0%,  0%,.03) 4.5%),  
+                            -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0) 1.2%, hsla(0,0%,100%,.15) 2.2%),  
+      
+                            -webkit-linear-gradient(-90deg, hsl(0,0%,78%)  0%,  
+                                                            hsl(0,0%,90%) 47%,  
+                                                            hsl(0,0%,78%) 53%,  
+                                                            hsl(0,0%,70%)100%);  
+    }
+h3 {
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size: 25pt;
+	color: black;
+}
+h4 {
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	color: black;
+	font-size: 20pt;
+}
+hr{
+	color: black; 
+	height: 2px;
+	border: 2px solid;
+}
+select{
+        border-radius: 5px;     
+        /*background-image: url(new_arrow.jpg);*/
+        background-position: center right;
+        background-repeat: no-repeat;
+        border: 1px solid;
+        color: black;
+        font-size: 99%;
+        font-family: Arial, Helvetica, sans-serif;
+        margin: 0;
+        height:auto; 
+        padding:10px;
+}
+
