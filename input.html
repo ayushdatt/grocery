@@ -13,12 +13,12 @@ and open the template in the editor.
     <body>
         <div>TODO write content</div>
         <form action="./api.php" method="POST">
-            <input type="text" name="rquest" value="getPriceListAndAvailability" hidden>
-            <input type="number" name="num_items">number items<br>
-            <input type="text" name="item_name[]">name1<br>
-            <input type="number" name="qty[]">q1<br>
-            <input type="text" name="item_name[]">name2<br>
-            <input type="number" name="qty[]">q2<br>
+            <input type="text" name="rquest" value="placeOrder" hidden>
+            <input type="number" name="num_items" value="2">number items<br>
+            <input type="text" name="item_name[]" value="rice">name1<br>
+            <input type="number" name="qty[]" value="2">q1<br>
+            <input type="text" name="item_name[]" value="biscuit">name2<br>
+            <input type="number" name="qty[]" value="3">q2<br>
             <input type="submit" name="submit">
         </form>
     </body>

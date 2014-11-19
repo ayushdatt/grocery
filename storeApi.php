@@ -144,48 +144,122 @@
 				$this->response('',204);	// If no records "No Content" status
 		}
 		
-                private function checkAvailability($name, $qty){
-                    //return a number of the availability or -1 if the item is not availble in the store
-                    return true;
-                }
-                
-                private function getPriceListAndAvailability(){
-                        echo "hi";
-			// Cross validation if the request method is POST else it will return "Not Acceptable" status
-			if($this->get_request_method() != "POST"){
-				$this->response('',406);
+        private function checkAvailability($name, $qty){
+        	echo "checking";
+            //return a number of the availability or -1 if the item is not availble in the store
+            return array(1, 10);
+        }
+
+
+        private function genOrderID(){
+        	return 100;
+        }
+
+        //delivery pick order 
+        private function pickOrder($time, $orderID){
+        	//prepare order before given time
+        	return;
+        }
+
+        private function getPrice($name){
+        	return 10;
+        }
+
+        private function checkQuan($name, $quan){
+        	//return 1 if given quantity available
+        	return 1;
+        	//return 0 if given quantity not available
+        }
+
+        private function placeOrder(){
+
+        	//confirms and places the order and redirects to the payment portal
+
+			$num_items = $this->_request['num_items'];	
+            $num_items = intval($num_items);
+
+            $price=array();
+            $status=array();
+            $avl_qty=array();
+            $total=0;
+			if(!empty($num_items)){
+	            $item_name=$this->_request['item_name'];
+	            $qty=$this->_request['qty'];
+	            for($i=0; $i<$num_items; $i++){
+	            	$qty[$i]=intval($qty[$i]);
+	                echo "printing";
+	                echo $item_name[$i]." ".$qty[$i];
+	                if($this->checkQuan($item_name[$i], $qty[$i])){
+		                $temp=$this->getPrice($item_name[$i]);
+		            	$price[$i]=$qty[$i]*$temp;
+		            	$total=$total+$price[$i];
+	            	}
+	            }
+
+	            $result=array();
+	            $result["item_name"]=$item_name;
+	            $result["qty"]=$qty;
+	            $result["price"]=$price;
+	            $result["total"]=$total;
+	            $result["orderID"]=$this->genOrderID();
+	            print_r($result);
+				$this->response($this->json($result), 200);
+
 			}
+	        else{
+	            echo "error expected params missing aaya";
+	            // If invalid inputs "Bad Request" status message and reason
+	            $error = array('status' => "Failed", "msg" => "Invalid Email address or Password");
+	            $this->response($this->json($error), 400);
+	        }
+
+
+
+        	//if the payment portal sends successful work done send receipt
+
+        	//else return payment failed :/
+        }
+                
+		private function getPriceListAndAvailability(){
+			// Cross validation if the request method is POST else it will return "Not Acceptable" status
 			
 			$num_items = $this->_request['num_items'];	
+            $num_items = intval($num_items);
                         echo $num_items;
+
                         // Input validations
+
+            $price=array();
+            $status=array();
+            $avl_qty=array();
 			if(!empty($num_items)){
-                            $item_name=$this->_request['item_name'];
-                            $qty=$this->_request['qty'];
-                            for($i=0; $i<$num_items; $i++){
-                                echo "printing";
-                                echo $item_name[$i]." ".$qty[$i];
-                                checkAvailability($item_name[$i], $qty[$i]);
-                            }
-//				if(filter_var($email, FILTER_VALIDATE_EMAIL)){
-//					$sql = mysql_query("SELECT user_id, user_fullname, user_email FROM users WHERE user_email = '$email' AND user_password = '".md5($password)."' LIMIT 1", $this->db);
-//					if(mysql_num_rows($sql) > 0){
-//						$result = mysql_fetch_array($sql,MYSQL_ASSOC);
-//						
-//						// If success everythig is good send header as "OK" and user details
-//						$this->response($this->json($result), 200);
-//					}
-//					$this->response('', 204);	// If no records "No Content" status
-//				}
+	            $item_name=$this->_request['item_name'];
+	            $qty=$this->_request['qty'];
+	            for($i=0; $i<$num_items; $i++){
+	            	$qty[$i]=intval($qty[$i]);
+	                echo "printing";
+	                echo $item_name[$i]." ".$qty[$i];
+	                $temp=$this->checkAvailability($item_name[$i], $qty[$i]);
+	            	$price[$i]=$temp[1];
+	            	$avl_qty[$i]=$temp[0];
+	            }
+
+	            $result=array();
+	            $result["item_name"]=$item_name;
+	            $result["qty"]=$qty;
+	            $result["price"]=$price;
+	            $result["avl_qty"]=$avl_qty;
+	            print_r($result);
+				$this->response($this->json($result), 200);
+
 			}
-                        else{
-                            echo "error expected params missing aaya";
-                            // If invalid inputs "Bad Request" status message and reason
-                            $error = array('status' => "Failed", "msg" => "Invalid Email address or Password");
-                            $this->response($this->json($error), 400);
-                        }
+	        else{
+	            echo "error expected params missing aaya";
+	            // If invalid inputs "Bad Request" status message and reason
+	            $error = array('status' => "Failed", "msg" => "Invalid Input");
+	            $this->response($this->json($error), 400);
+	        }
 		}
-                
                 
 		/*
 		 *	Encode array into JSON
